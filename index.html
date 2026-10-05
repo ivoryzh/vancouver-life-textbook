@@ -1,0 +1,898 @@
+<meta charset="utf-8">
+<title>温哥华生活课本</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap">
+<style>
+/* Layout: one readable column. Home is a textbook table of contents; a lesson is a stack of
+   sentence cards (my lines indented, like a dialogue) with a fixed player bar at the bottom.
+   The reading cursor is a highlighter pen moving across the printed line. */
+:root {
+  --bg: #F1F5F4;
+  --surface: #FFFFFF;
+  --ink: #14262A;
+  --ink-2: #2F4448;
+  --muted: #536a6e;
+  --rule: #D2DDDB;
+  --hover: #F3F8F7;
+  --accent: #1B6A65;
+  --accent-ink: #FFFFFF;
+  --accent-soft: #DCECE9;
+  --me: #E7F0EE;
+  --alt: #F5F0E6;
+  --mark: #FFDF5E;
+  --mark-ink: #1A1A0E;
+  --mark-soft: #FFE98F;
+  --read: #1B6A65;
+  --hear-bg: #FFF6D2;
+  --hear-ink: #5B4906;
+  --focus: #C99700;
+  --shadow: rgba(20, 38, 42, 0.10);
+
+  --font-en: "Atkinson Hyperlegible", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-zh: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", sans-serif;
+  --font-display: "Noto Serif SC", "Songti SC", "STSong", "SimSun", serif;
+
+  --scale: 1.1;
+  --radius: 14px;
+  --gutter: clamp(16px, 4vw, 28px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E191B; --surface: #16252A; --ink: #E6EFED; --ink-2: #C4D4D2; --muted: #93A9AA;
+    --rule: #2A3D41; --hover: #1C2E33; --accent: #5EC1B6; --accent-ink: #062320; --accent-soft: #1A3838;
+    --me: #1A2F33; --alt: #27251D; --mark: #F4D24B; --mark-ink: #1A1A0E; --mark-soft: #6A5B17; --read: #82D4CA;
+    --hear-bg: #2B2915; --hear-ink: #EBDD9C; --focus: #F4D24B; --shadow: rgba(0, 0, 0, 0.35);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E191B; --surface: #16252A; --ink: #E6EFED; --ink-2: #C4D4D2; --muted: #93A9AA;
+  --rule: #2A3D41; --hover: #1C2E33; --accent: #5EC1B6; --accent-ink: #062320; --accent-soft: #1A3838;
+  --me: #1A2F33; --alt: #27251D; --mark: #F4D24B; --mark-ink: #1A1A0E; --mark-soft: #6A5B17; --read: #82D4CA;
+  --hear-bg: #2B2915; --hear-ink: #EBDD9C; --focus: #F4D24B; --shadow: rgba(0, 0, 0, 0.35);
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { font-size: calc(17px * var(--scale)); -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-zh);
+  line-height: 1.6;
+  -webkit-tap-highlight-color: transparent;
+}
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+svg { display: block; }
+[lang="en"] { font-family: var(--font-en); }
+
+.app { max-width: 46rem; margin-inline: auto; padding-inline: var(--gutter); padding-block: 0 9rem; }
+
+/* ---------- shared bits ---------- */
+.tool-btn {
+  display: inline-flex; align-items: center; gap: .4rem; flex: none;
+  min-height: 3rem; padding: .45rem .95rem;
+  border: 1.5px solid var(--rule); border-radius: 999px;
+  background: var(--surface); font-size: .95rem;
+}
+.tool-btn svg { width: 1.25rem; height: 1.25rem; }
+.tool-btn:hover { border-color: var(--accent); }
+.tag { display: inline-block; margin-right: .5rem; font-size: .78rem; font-weight: 700; letter-spacing: .06em; color: var(--accent); }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+  min-height: 3.25rem; padding: .6rem 1.2rem;
+  border: 1.5px solid var(--rule); border-radius: 12px;
+  background: var(--surface); font-size: 1.05rem; font-weight: 500;
+}
+.btn svg { width: 1.2rem; height: 1.2rem; flex: none; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.small { min-height: 2.6rem; padding: .35rem .9rem; font-size: .95rem; }
+.notice { margin: 0; padding: .9rem 1rem; border-radius: var(--radius); background: var(--hear-bg); color: var(--hear-ink); font-size: .95rem; }
+
+/* ---------- home ---------- */
+.masthead { padding-block: 2rem 1.25rem; }
+.mast-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+.brand { margin: 0; font-family: var(--font-display); font-size: 2.05rem; font-weight: 700; line-height: 1.25; letter-spacing: .02em; text-wrap: balance; }
+.hl { padding-inline: .08em; background: linear-gradient(transparent 60%, var(--mark-soft) 60%, var(--mark-soft) 92%, transparent 92%); }
+.brand-sub { margin: .35rem 0 0; color: var(--muted); font-size: .95rem; }
+
+.resume { display: grid; gap: .8rem; margin-block: .25rem 2.25rem; }
+.resume-btn {
+  display: grid; grid-template-columns: 1fr auto; align-items: center; gap: .1rem 1rem;
+  grid-template-areas: "label arrow" "title arrow" "meta arrow";
+  padding: 1.2rem 1.25rem 1.3rem; border: 0; border-radius: var(--radius);
+  background: var(--accent); color: var(--accent-ink); text-align: left;
+}
+.resume-label { grid-area: label; font-size: .9rem; opacity: .85; }
+.resume-title { grid-area: title; font-family: var(--font-display); font-size: 1.65rem; font-weight: 700; line-height: 1.3; }
+.resume-meta { grid-area: meta; font-size: .9rem; opacity: .85; }
+.resume-arrow { grid-area: arrow; display: grid; place-items: center; width: 3.4rem; height: 3.4rem; border-radius: 50%; background: var(--accent-ink); color: var(--accent); }
+.resume-arrow svg { width: 1.5rem; height: 1.5rem; margin-left: .15rem; }
+.progress { display: flex; align-items: center; gap: .75rem; color: var(--muted); font-size: .9rem; font-variant-numeric: tabular-nums; }
+.bar { flex: 1; height: .45rem; border-radius: 99px; background: var(--rule); overflow: hidden; }
+.bar span { display: block; height: 100%; border-radius: 99px; background: var(--accent); }
+.howto-line { margin: 0; color: var(--muted); font-size: .92rem; }
+
+.chapter { margin-block: 0 1.9rem; }
+.ch-head { display: grid; gap: .05rem; margin-bottom: .65rem; }
+.ch-no { color: var(--accent); font-size: .85rem; font-weight: 700; letter-spacing: .1em; }
+.ch-head h2 { margin: 0; font-family: var(--font-display); font-size: 1.4rem; line-height: 1.3; text-wrap: balance; }
+.ch-en { margin: 0; color: var(--muted); font-size: .9rem; }
+.scenes { list-style: none; margin: 0; padding: 0; overflow: hidden; border: 1px solid var(--rule); border-radius: var(--radius); background: var(--surface); }
+.scenes li + li { border-top: 1px solid var(--rule); }
+.scene-row {
+  display: flex; align-items: center; gap: .9rem; width: 100%; min-height: 4.2rem;
+  padding: .9rem 1rem; border: 0; background: transparent; text-align: left;
+}
+.scene-row:hover { background: var(--hover); }
+.sc-no {
+  display: grid; place-items: center; flex: none; width: 2.3rem; height: 2.3rem; border-radius: 50%;
+  background: var(--accent-soft); color: var(--accent); font-family: var(--font-en); font-weight: 700; font-variant-numeric: tabular-nums;
+}
+.sc-no svg { width: 1.2rem; height: 1.2rem; }
+.is-done .sc-no { background: var(--accent); color: var(--accent-ink); }
+.sc-text { display: grid; flex: 1; min-width: 0; }
+.sc-title { font-size: 1.15rem; font-weight: 500; line-height: 1.4; }
+.sc-en { color: var(--muted); font-size: .85rem; }
+.sc-meta { flex: none; color: var(--muted); font-size: .9rem; }
+.is-done .sc-meta { color: var(--accent); font-weight: 700; }
+.foot { margin: 2.5rem 0 0; color: var(--muted); font-size: .85rem; }
+
+/* ---------- lesson ---------- */
+.topbar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  display: flex; align-items: center; justify-content: space-between; gap: .75rem;
+  margin-inline: calc(-1 * var(--gutter)); padding: .6rem var(--gutter);
+  background: var(--bg); border-bottom: 1px solid var(--rule);
+}
+.top-title { flex: 1; min-width: 0; overflow: hidden; color: var(--muted); font-size: .9rem; text-align: center; white-space: nowrap; text-overflow: ellipsis; }
+.lesson-head { display: grid; gap: .35rem; padding-block: 1.5rem 1rem; }
+.eyebrow { margin: 0; color: var(--accent); font-size: .9rem; font-weight: 700; letter-spacing: .1em; }
+.lesson-head h1 { margin: 0; font-family: var(--font-display); font-size: 2.15rem; line-height: 1.25; text-wrap: balance; }
+.lesson-en { margin: 0; color: var(--muted); font-size: 1.1rem; }
+.intro { display: grid; gap: .3rem; margin-top: .8rem; padding: 1rem 1.1rem; border-radius: var(--radius); background: var(--accent-soft); }
+.intro p { margin: 0; }
+.howto { display: flex; align-items: flex-start; gap: .5rem; margin: .6rem 0 0; color: var(--muted); font-size: .95rem; }
+.howto svg { width: 1.2rem; height: 1.2rem; margin-top: .2rem; flex: none; color: var(--accent); }
+
+.dialogue { display: grid; gap: 1rem; padding-block: .5rem 1rem; }
+.line {
+  display: grid; gap: .55rem; min-width: 0;
+  padding: 1rem 1.1rem 1.15rem;
+  border: 2px solid var(--rule); border-radius: var(--radius);
+  background: var(--surface); cursor: pointer;
+  transition: border-color .15s, box-shadow .15s;
+}
+.line.me { margin-left: clamp(.75rem, 6vw, 3rem); border-color: transparent; background: var(--me); }
+.line.alt { margin-left: clamp(.75rem, 6vw, 3rem); border-color: transparent; background: var(--alt); }
+.line.is-active { border-color: var(--accent); box-shadow: 0 6px 22px var(--shadow); }
+.line-top { display: flex; align-items: center; justify-content: space-between; gap: .75rem; }
+.who { padding: .15rem .75rem; border-radius: 99px; background: var(--accent-soft); color: var(--accent); font-size: .85rem; font-weight: 700; }
+.me .who { background: var(--ink); color: var(--surface); }
+.alt .who { background: var(--hear-bg); color: var(--hear-ink); }
+.play {
+  display: grid; place-items: center; flex: none; width: 3.2rem; height: 3.2rem;
+  border: 0; border-radius: 50%; background: var(--accent); color: var(--accent-ink);
+}
+.play svg { width: 1.45rem; height: 1.45rem; }
+.play .i-play { margin-left: .15rem; }
+.play .i-stop, .is-speaking .play .i-play { display: none; }
+.is-speaking .play .i-stop { display: block; }
+
+.en { margin: 0; font-size: 1.6rem; line-height: 1.5; overflow-wrap: anywhere; }
+.w { border-radius: .18em; transition: background-color .08s, color .08s, box-shadow .08s; }
+.w.read { color: var(--read); }
+.w.on { background: var(--mark); color: var(--mark-ink); box-shadow: 0 0 0 .1em var(--mark); }
+.zh { margin: 0; color: var(--ink-2); font-size: 1.1rem; }
+.hear { margin: 0; padding: .5rem .75rem; border-radius: 10px; background: var(--hear-bg); color: var(--hear-ink); font-size: .95rem; }
+.hear .tag { color: var(--hear-ink); }
+.hear [lang="en"] { font-size: 1.05rem; font-style: italic; }
+.note { margin: 0; color: var(--ink-2); font-size: .95rem; }
+.chips { display: grid; gap: .35rem; }
+.chip-row { display: flex; flex-wrap: wrap; gap: .5rem; }
+.chip {
+  display: inline-flex; align-items: center; flex-wrap: wrap; gap: .1rem .5rem; max-width: 100%;
+  min-height: 2.8rem; padding: .4rem .85rem;
+  border: 1.5px solid var(--rule); border-radius: 12px; background: var(--surface); text-align: left;
+}
+.chip svg { width: 1.1rem; height: 1.1rem; flex: none; color: var(--accent); }
+.chip-en { font-size: 1.02rem; font-weight: 700; }
+.chip-zh { color: var(--muted); font-size: .9rem; }
+.chip:hover { border-color: var(--accent); }
+.chip.is-speaking { border-color: var(--accent); background: var(--accent-soft); }
+
+.reveal { display: none; justify-self: start; padding: .55rem 1rem; border: 1.5px dashed var(--accent); border-radius: 10px; background: transparent; color: var(--accent); font-size: 1rem; }
+.hide-en .line:not(.show-en) .en,
+.hide-en .line:not(.show-en) .hear,
+.hide-zh .line:not(.show-zh) .zh { display: none; }
+.hide-en .line:not(.show-en) .reveal[data-reveal="en"],
+.hide-zh .line:not(.show-zh) .reveal[data-reveal="zh"] { display: block; }
+
+.lesson-end { display: grid; gap: .9rem; margin-top: 1.5rem; padding: 1.25rem; border: 1px solid var(--rule); border-radius: var(--radius); background: var(--surface); }
+.lesson-end p { margin: 0; }
+.end-note { color: var(--ink-2); }
+.done-badge { display: flex; align-items: center; gap: .4rem; color: var(--accent); font-weight: 700; }
+.done-badge svg { width: 1.2rem; height: 1.2rem; }
+.end-actions { display: flex; flex-wrap: wrap; gap: .75rem; }
+.end-actions .btn { flex: 1 1 12rem; }
+.next-up { color: var(--muted); font-size: .9rem; }
+
+/* ---------- player bar ---------- */
+.player {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
+  padding: .65rem var(--gutter) calc(.65rem + env(safe-area-inset-bottom, 0px));
+  background: var(--surface); border-top: 1px solid var(--rule); box-shadow: 0 -6px 24px var(--shadow);
+}
+.player-inner { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; max-width: 46rem; margin-inline: auto; }
+.speed { display: flex; align-items: center; gap: .5rem; }
+.speed-label { color: var(--muted); font-size: .9rem; }
+.seg { display: inline-flex; gap: .2rem; padding: .22rem; border: 1px solid var(--rule); border-radius: 14px; background: var(--bg); }
+.seg button {
+  min-width: 3rem; min-height: 2.8rem; padding: .3rem .75rem;
+  border: 0; border-radius: 10px; background: transparent; color: var(--muted); font-size: 1rem;
+}
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--accent); font-weight: 700; box-shadow: 0 1px 4px var(--shadow); }
+.play-all {
+  display: inline-flex; align-items: center; justify-content: center; gap: .55rem; flex: 1 1 9rem;
+  min-height: 3.4rem; padding: .4rem 1rem; border: 0; border-radius: 14px;
+  background: var(--accent); color: var(--accent-ink); font-size: 1.15rem; font-weight: 700;
+}
+.play-all svg { width: 1.3rem; height: 1.3rem; }
+.play-all .count { font-family: var(--font-en); font-weight: 400; opacity: .85; font-variant-numeric: tabular-nums; }
+
+/* ---------- settings ---------- */
+dialog {
+  width: min(34rem, calc(100vw - 32px)); max-height: calc(100dvh - 48px);
+  padding: 0; border: 0; border-radius: 18px;
+  background: var(--surface); color: var(--ink); box-shadow: 0 20px 60px var(--shadow);
+}
+dialog::backdrop { background: rgba(8, 18, 20, 0.55); }
+.sheet { display: grid; gap: 1.35rem; padding: 0 1.25rem 1.5rem; }
+.sheet-head { position: sticky; top: 0; z-index: 1; display: flex; align-items: center; justify-content: space-between; padding-block: 1.1rem .6rem; background: var(--surface); }
+.sheet-head h2 { margin: 0; font-family: var(--font-display); font-size: 1.4rem; }
+.field { display: grid; gap: .5rem; }
+.field h3 { margin: 0; font-size: 1rem; }
+.field .seg { justify-self: start; flex-wrap: wrap; }
+.hint { margin: 0; color: var(--muted); font-size: .88rem; }
+.toggle { display: flex; align-items: center; gap: .75rem; min-height: 2.75rem; font-size: 1.05rem; cursor: pointer; }
+.toggle input { width: 1.4rem; height: 1.4rem; margin: 0; accent-color: var(--accent); }
+.voice { display: grid; gap: .35rem; }
+.voice label { font-size: .95rem; }
+.voice-row { display: flex; gap: .5rem; min-width: 0; }
+.voice-row select {
+  flex: 1; min-width: 0; padding: .55rem .6rem;
+  border: 1.5px solid var(--rule); border-radius: 10px;
+  background: var(--bg); color: var(--ink); font: inherit; font-size: .95rem;
+}
+
+@media (max-width: 30rem) {
+  .brand { font-size: 1.75rem; }
+  .en { font-size: 1.45rem; }
+  .speed-label { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; scroll-behavior: auto !important; }
+}
+</style>
+
+<main class="app" id="app"></main>
+
+<div class="player" id="player" hidden>
+  <div class="player-inner">
+    <div class="speed">
+      <span class="speed-label">语速</span>
+      <div class="seg" role="group" aria-label="朗读速度">
+        <button type="button" data-rate="slow">慢</button>
+        <button type="button" data-rate="mid">中</button>
+        <button type="button" data-rate="normal">原速</button>
+      </div>
+    </div>
+    <button type="button" class="play-all" id="play-all"></button>
+  </div>
+</div>
+
+<dialog id="settings" aria-labelledby="settings-title">
+  <div class="sheet">
+    <div class="sheet-head">
+      <h2 id="settings-title">设置</h2>
+      <button type="button" class="btn small primary" data-close>完成</button>
+    </div>
+    <section class="field">
+      <h3>字的大小</h3>
+      <div class="seg" role="group" aria-label="字的大小">
+        <button type="button" data-size="0">小</button>
+        <button type="button" data-size="1">中</button>
+        <button type="button" data-size="2">大</button>
+        <button type="button" data-size="3">特大</button>
+      </div>
+    </section>
+    <section class="field">
+      <h3>朗读速度</h3>
+      <div class="seg" role="group" aria-label="朗读速度">
+        <button type="button" data-rate="slow">慢</button>
+        <button type="button" data-rate="mid">中</button>
+        <button type="button" data-rate="normal">原速</button>
+      </div>
+      <p class="hint">刚开始用「慢」或「中」。听熟了换成「原速」，那才是外面真实的语速。</p>
+    </section>
+    <section class="field">
+      <h3>连续播放时，每句读几遍</h3>
+      <div class="seg" role="group" aria-label="每句读几遍">
+        <button type="button" data-repeat="1">1 遍</button>
+        <button type="button" data-repeat="2">2 遍</button>
+        <button type="button" data-repeat="3">3 遍</button>
+      </div>
+    </section>
+    <section class="field">
+      <h3>显示文字</h3>
+      <label class="toggle"><input type="checkbox" id="opt-en"><span>显示英文</span></label>
+      <label class="toggle"><input type="checkbox" id="opt-zh"><span>显示中文</span></label>
+      <p class="hint">想练听力时，可以先关掉英文：只听声音猜意思，再点一下看答案。</p>
+    </section>
+    <section class="field">
+      <h3>设备朗读的声音</h3>
+      <p class="hint">课文对话用 AI 生成好的语音。「你可以回答」和「生词」里的按钮，用这台手机或电脑自带的声音朗读。一般选「设备默认」最自然。</p>
+      <div class="voice">
+        <label for="voice-sel">声音</label>
+        <div class="voice-row"><select id="voice-sel"></select><button type="button" class="btn small" data-test>试听</button></div>
+      </div>
+      <p class="hint" id="voice-hint"></p>
+    </section>
+  </div>
+</dialog>
+
+<script src="lessons.js"></script>
+<script src="audio/manifest.js"></script>
+<script>
+(function () {
+  "use strict";
+  document.documentElement.lang = "zh-CN";
+
+  /* ---------- data ---------- */
+  const CHAPTERS = window.LESSONS || [];
+  const SCENES = [];
+  CHAPTERS.forEach((ch, ci) => ch.scenes.forEach((sc, si) => SCENES.push(Object.assign({}, sc, { chapter: ch, ci, si }))));
+  const INDEX = {};
+  SCENES.forEach((s, i) => { INDEX[s.id] = i; });
+
+  const SIZES = [0.95, 1.1, 1.25, 1.45];
+  const RATES = { slow: 0.7, mid: 0.85, normal: 1 };
+  const KEY = "vlt-v1";
+
+  const saved = (() => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } })();
+  saved.done = saved.done || {};
+  saved.settings = Object.assign({ size: 1, rate: "mid", repeat: 1, showEn: true, showZh: true, voice: "" }, saved.settings);
+  const S = saved.settings;
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (e) { /* storage unavailable */ } }
+
+  const ICON = {
+    play: '<svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.2v13.6L19 12z" fill="currentColor"/></svg>',
+    stop: '<svg class="i-stop" viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="6.5" width="11" height="11" rx="1.5" fill="currentColor"/></svg>',
+    back: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5.5 8 12l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    next: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 5.5 16 12l-6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    sliders: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="15" cy="7" r="2.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="17" r="2.2" fill="none" stroke="currentColor" stroke-width="2"/></svg>',
+    speaker: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z" fill="currentColor"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+    check: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+  };
+
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const reduceMotion = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- speech: browser TTS with a word cursor ----------
+     Uses word-boundary events when the voice sends them (Safari, Edge, most local voices).
+     When it doesn't (e.g. Google voices in Chrome), the cursor follows a syllable-based estimate. */
+  const Speech = (() => {
+    const synth = "speechSynthesis" in window ? window.speechSynthesis : null;
+    let cur = null;
+    let lastCancel = 0;
+
+    const NOVELTY = /albert|bad news|bahh|bells|boing|bubbles|cellos|good news|jester|organ|superstar|trinoids|whisper|wobble|zarvox|fred|junior|ralph|kathy|grandma|grandpa|eddy|flo|reed|rocko|sandy|shelley/i;
+    function score(v) {
+      const lang = v.lang.replace("_", "-").toLowerCase();
+      let s = lang === "en-ca" ? 30 : lang === "en-us" ? 22 : lang === "en-gb" ? 12 : 4;
+      if (/natural|neural|enhanced|premium/i.test(v.name)) s += 25;
+      if (/google/i.test(v.name)) s += 14;
+      if (/samantha|ava|allison|susan|zoe|evan|nathan|aria|jenny|guy|clara|liam|emma|brian/i.test(v.name)) s += 10;
+      if (NOVELTY.test(v.name)) s -= 100;
+      return s;
+    }
+    function voices() {
+      if (!synth) return [];
+      return synth.getVoices().filter(v => /^en([-_]|$)/i.test(v.lang)).sort((a, b) => score(b) - score(a));
+    }
+    function tokenize(text) {
+      const out = [], re = /\S+/g;
+      let m;
+      while ((m = re.exec(text))) out.push({ w: m[0], s: m.index, e: m.index + m[0].length });
+      return out;
+    }
+    function syllables(w) {
+      const bare = w.replace(/[.,!?;:]+$/, "");
+      if (/^([A-Z]-)+[A-Z]$/.test(bare)) return bare.split("-").length;      // spelled out: W-A-N-G
+      const core = bare.toLowerCase().replace(/[^a-z0-9]/g, "");
+      if (/^\d+$/.test(core)) return core.length * 1.3;
+      const groups = core.replace(/e$/, "").match(/[aeiouy]+/g);
+      return Math.max(1, groups ? groups.length : 1);
+    }
+    function estimate(tokens, rate) {
+      const unit = 0.22 / rate;
+      let t = 0;
+      const starts = tokens.map(tk => {
+        const at = t;
+        const pause = /[.!?]$/.test(tk.w) ? 2.2 : /[,;:]$/.test(tk.w) ? 1.4 : 0;
+        t += (syllables(tk.w) + pause) * unit;
+        return at;
+      });
+      return { starts, total: t };
+    }
+
+    function stop() {
+      const job = cur;
+      cur = null;
+      if (job) job.finish("cancel");
+      if (synth && (synth.speaking || synth.pending)) { synth.cancel(); lastCancel = Date.now(); }
+    }
+
+    function speak(text, opts) {
+      opts = opts || {};
+      stop();
+      return new Promise(resolve => {
+        const onWord = opts.onWord || function () {};
+        const rate = opts.rate || 1;
+        const tokens = tokenize(text);
+        const est = estimate(tokens, rate);
+        const job = { timers: [], boundary: false, done: false };
+        cur = job;
+        const clearTimers = () => { job.timers.forEach(clearTimeout); job.timers = []; };
+        job.finish = why => {
+          if (job.done) return;
+          job.done = true;
+          clearTimers();
+          clearTimeout(job.watchdog);
+          if (cur === job) cur = null;
+          resolve(why);
+        };
+        if (!synth) { setTimeout(() => job.finish("unsupported"), 0); return; }
+
+        const u = new SpeechSynthesisUtterance(text);
+        job.u = u; // keep a reference so the utterance isn't garbage-collected mid-speech (Chrome)
+        // Without a chosen voice, asking for en-US lets the device use its own default English voice.
+        if (opts.voice) { u.voice = opts.voice; u.lang = opts.voice.lang; } else { u.lang = "en-US"; }
+        u.rate = rate;
+        u.onstart = () => {
+          if (job.done || job.boundary) return;
+          est.starts.forEach((at, i) => job.timers.push(setTimeout(() => { if (!job.boundary && !job.done) onWord(i); }, at * 1000)));
+        };
+        u.onboundary = e => {
+          if (job.done || (e.name && e.name !== "word")) return;
+          if (!job.boundary) { job.boundary = true; clearTimers(); }
+          let k = tokens.findIndex(t => t.e > e.charIndex);
+          if (k < 0) k = tokens.length - 1;
+          onWord(k);
+        };
+        u.onend = () => job.finish("end");
+        u.onerror = e => job.finish(e && (e.error === "interrupted" || e.error === "canceled") ? "cancel" : "error");
+        job.watchdog = setTimeout(() => job.finish("end"), est.total * 2500 + 6000);
+
+        const go = () => { if (!job.done) synth.speak(u); };
+        // Speaking right after cancel() is flaky in Chrome; the first call stays synchronous so iOS treats it as a user gesture.
+        if (Date.now() - lastCancel < 120) setTimeout(go, 120); else go();
+      });
+    }
+
+    function onVoices(cb) {
+      if (!synth) return;
+      if (synth.addEventListener) synth.addEventListener("voiceschanged", cb);
+      else synth.onvoiceschanged = cb;
+    }
+    return { speak, stop, voices, onVoices, supported: !!synth };
+  })();
+
+  // The device voice picked in settings; null means the device's own default English voice.
+  const deviceVoice = () => (S.voice && Speech.voices().find(v => v.name === S.voice)) || null;
+  const rateValue = () => RATES[S.rate] || 0.85;
+
+  /* ---------- generated clips (audio/manifest.js, made by tools/make_audio.py) ----------
+     Each entry has the mp3 file, the start time (ms) of every word, and the duration. */
+  const CLIPS = window.AUDIO || {};
+  const Clip = (() => {
+    const el = new Audio();
+    el.preload = "auto";
+    let cur = null;
+
+    function stop() {
+      const job = cur;
+      cur = null;
+      if (job) job.finish("cancel");
+      el.pause();
+    }
+
+    function play(entry, opts) {
+      stop();
+      return new Promise(resolve => {
+        const job = { done: false };
+        const rate = opts.rate || 1;
+        let ticker = 0, last = -1;
+        cur = job;
+        job.finish = why => {
+          if (job.done) return;
+          job.done = true;
+          clearInterval(ticker);
+          clearTimeout(job.watchdog);
+          el.onended = el.onerror = null;
+          if (cur === job) cur = null;
+          resolve(why);
+        };
+        el.src = "audio/" + entry.f;
+        el.defaultPlaybackRate = rate;   // a new src resets playbackRate to this
+        el.playbackRate = rate;
+        el.preservesPitch = el.webkitPreservesPitch = true;
+        el.onended = () => job.finish("end");
+        el.onerror = () => job.finish("error");
+        // A plain timer rather than requestAnimationFrame, which stalls whenever the page isn't being painted.
+        const tick = () => {
+          if (job.done) return;
+          const t = el.currentTime * 1000;
+          let k = last;
+          while (k + 1 < entry.w.length && entry.w[k + 1] <= t) k++;
+          if (k !== last) { last = k; if (opts.onWord) opts.onWord(k); }
+        };
+        el.play().then(() => { if (!job.done) ticker = setInterval(tick, 30); }, () => job.finish("error"));
+        job.watchdog = setTimeout(() => job.finish("end"), entry.d / rate + 8000);
+      });
+    }
+    return { play, stop };
+  })();
+
+  const roleOf = line => line.who === "me" ? "我" : (line.role || "对方");
+  const hasClip = line => Object.prototype.hasOwnProperty.call(CLIPS, roleOf(line) + "|" + line.en);
+
+  // Plays the line's generated clip when there is one; otherwise the device's own voice reads it.
+  async function sayLine(line, opts) {
+    if (hasClip(line)) {
+      const res = await Clip.play(CLIPS[roleOf(line) + "|" + line.en], opts);
+      if (res !== "error") return res;
+    }
+    return Speech.speak(line.en, Object.assign({ voice: deviceVoice() }, opts));
+  }
+
+  /* ---------- wake lock during continuous play ---------- */
+  let wake = null;
+  async function keepAwake(on) {
+    try {
+      if (on && !wake && navigator.wakeLock) wake = await navigator.wakeLock.request("screen");
+      else if (!on && wake) { const w = wake; wake = null; await w.release(); }
+    } catch (e) { wake = null; }
+  }
+
+  /* ---------- views ---------- */
+  const app = document.getElementById("app");
+  const player = document.getElementById("player");
+  const playAllBtn = document.getElementById("play-all");
+  let scene = null;
+  let sceneIndex = -1;
+  let lines = [];        // the current scene's lines
+  let altRole = "";      // in a two-person listening scene, the second speaker
+
+  const settingsBtn = () => `<button type="button" class="tool-btn" data-settings>${ICON.sliders}<span>设置</span></button>`;
+
+  function pickNext() {
+    const li = Object.prototype.hasOwnProperty.call(INDEX, saved.last) ? INDEX[saved.last] : -1;
+    if (li >= 0 && !saved.done[saved.last]) return li;
+    for (let k = 1; k <= SCENES.length; k++) {
+      const i = (li + k + SCENES.length) % SCENES.length;
+      if (!saved.done[SCENES[i].id]) return i;
+    }
+    return 0;
+  }
+
+  function renderHome() {
+    scene = null; sceneIndex = -1;
+    player.hidden = true;
+    const total = SCENES.length;
+    const doneCount = SCENES.filter(s => saved.done[s.id]).length;
+    const n = SCENES[pickNext()];
+    const label = doneCount === total ? "全部学完了，挑一课复习吧" : saved.last ? "接着学" : "从第一课开始";
+    app.innerHTML = `
+      <header class="masthead">
+        <div class="mast-row">
+          <div>
+            <h1 class="brand">温哥华<span class="hl">生活</span>课本</h1>
+            <p class="brand-sub"><span lang="en">Everyday English for Vancouver</span> · 每天听十分钟</p>
+          </div>
+          ${settingsBtn()}
+        </div>
+      </header>
+      <section class="resume">
+        <button type="button" class="resume-btn" data-go="${n.id}">
+          <span class="resume-label">${label}</span>
+          <span class="resume-title">${esc(n.title)}</span>
+          <span class="resume-meta">第 ${n.ci + 1} 章 · ${esc(n.chapter.title)} · ${n.lines.length} 句</span>
+          <span class="resume-arrow">${ICON.play}</span>
+        </button>
+        <div class="progress"><div class="bar"><span style="width:${Math.round(doneCount / total * 100)}%"></span></div><span>已学 ${doneCount} / ${total} 课</span></div>
+        <p class="howto-line">用法：点进一课 → 点一句话听发音 → 听熟了，点「连续播放」从头听到尾。</p>
+      </section>
+      ${CHAPTERS.map(chapterBlock).join("")}
+      <p class="foot">课文对话由 AI 语音朗读；「你可以回答」和「生词」的按钮用这台设备自带的声音。学习进度保存在这台手机或电脑的浏览器里。</p>`;
+  }
+
+  function chapterBlock(ch, ci) {
+    const rows = ch.scenes.map((sc, si) => {
+      const done = !!saved.done[sc.id];
+      return `<li><button type="button" class="scene-row${done ? " is-done" : ""}" data-go="${sc.id}">
+        <span class="sc-no">${done ? ICON.check : si + 1}</span>
+        <span class="sc-text"><span class="sc-title">${esc(sc.title)}</span><span class="sc-en" lang="en">${esc(sc.en)}</span></span>
+        <span class="sc-meta">${done ? "已学" : sc.lines.length + " 句" + (sc.listen ? " · 只听" : "")}</span>
+      </button></li>`;
+    }).join("");
+    return `<section class="chapter">
+      <div class="ch-head"><span class="ch-no">第 ${ci + 1} 章</span><h2>${esc(ch.title)}</h2><p class="ch-en" lang="en">${esc(ch.en)}</p></div>
+      <ol class="scenes">${rows}</ol>
+    </section>`;
+  }
+
+  function renderLesson(i) {
+    scene = SCENES[i]; sceneIndex = i;
+    lines = scene.lines;
+    altRole = scene.listen ? ([...new Set(lines.map(roleOf))][1] || "") : "";
+    saved.last = scene.id; save();
+    player.hidden = false;
+    app.innerHTML = `
+      <nav class="topbar">
+        <button type="button" class="tool-btn" data-home>${ICON.back}<span>目录</span></button>
+        <span class="top-title">第 ${scene.ci + 1} 章 · ${esc(scene.chapter.title)}</span>
+        ${settingsBtn()}
+      </nav>
+      <header class="lesson-head">
+        <p class="eyebrow">第 ${scene.ci + 1} 章 · 第 ${scene.si + 1} 课</p>
+        <h1>${esc(scene.title)}</h1>
+        <p class="lesson-en" lang="en">${esc(scene.en)}</p>
+        <div class="intro"><span class="tag">场景</span><p>${esc(scene.intro)}</p></div>
+        ${Speech.supported || lines.every(hasClip) ? "" : '<p class="notice">这一课有句子还没生成语音，这个浏览器也不能朗读英文。请换用 Safari、Chrome 或 Edge 打开。</p>'}
+        <p class="howto">${ICON.play}<span>${scene.listen
+          ? "这一课只需要听。可以先在「设置」里关掉英文，只听声音猜意思，再打开英文对照。"
+          : "点任何一句就能听。点最下面的「连续播放」，会从头读到尾。"}</span></p>
+      </header>
+      <div class="dialogue">${lines.map(lineCard).join("")}</div>
+      ${endBlock()}`;
+    updatePlayAll();
+  }
+
+  function lineCard(l, i) {
+    const words = l.en.split(/(\s+)/).map(p => (!p || /^\s+$/.test(p)) ? p : `<span class="w">${esc(p)}</span>`).join("");
+    const role = roleOf(l);
+    const side = l.who === "me" ? "me" : (altRole && role === altRole ? "them alt" : "them");
+    return `<article class="line ${side}" data-i="${i}">
+      <div class="line-top">
+        <span class="who">${esc(role)}</span>
+        <button type="button" class="play" aria-label="播放这一句">${ICON.play}${ICON.stop}</button>
+      </div>
+      <p class="en" lang="en">${words}</p>
+      <button type="button" class="reveal" data-reveal="en">点一下，看英文</button>
+      <p class="zh">${esc(l.zh)}</p>
+      <button type="button" class="reveal" data-reveal="zh">点一下，看中文</button>
+      ${l.hear ? `<p class="hear"><span class="tag">听起来像</span><span lang="en">${esc(l.hear)}</span></p>` : ""}
+      ${l.note ? `<p class="note"><span class="tag">小贴士</span>${esc(l.note)}</p>` : ""}
+      ${l.say ? chips("say", i, l.say, l.who === "me" ? "也可以说" : "你可以回答") : ""}
+      ${l.words ? chips("words", i, l.words, "生词") : ""}
+    </article>`;
+  }
+
+  function chips(kind, i, list, label) {
+    return `<div class="chips"><span class="tag">${label}</span><div class="chip-row">${list.map((c, k) =>
+      `<button type="button" class="chip" data-chip="${kind}" data-i="${i}" data-k="${k}">${ICON.speaker}<span class="chip-en" lang="en">${esc(c[0])}</span><span class="chip-zh">${esc(c[1])}</span></button>`
+    ).join("")}</div></div>`;
+  }
+
+  function endBlock() {
+    const next = SCENES[sceneIndex + 1];
+    const done = !!saved.done[scene.id];
+    return `<footer class="lesson-end" id="lesson-end">
+      ${done ? `<p class="done-badge">${ICON.check}这一课已经学过了</p>` : ""}
+      <p class="end-note">这一课一共 ${lines.length} 句。不着急，多听几遍，听熟了再学下一课。</p>
+      <div class="end-actions">
+        <button type="button" class="btn" data-again>${ICON.play}从头再听一遍</button>
+        <button type="button" class="btn primary" data-finish>${next ? "学完了，下一课" : "学完了，回到目录"}${ICON.next}</button>
+      </div>
+      ${next ? `<p class="next-up">下一课：${esc(next.title)}</p>` : ""}
+    </footer>`;
+  }
+
+  /* ---------- playback ---------- */
+  let run = 0;          // bumping this cancels any running sequence
+  let playingAll = false;
+  const clearTimers = new WeakMap();
+  const cardEl = i => app.querySelector(`.line[data-i="${i}"]`);
+
+  function updatePlayAll(i) {
+    if (!scene) return;
+    playAllBtn.innerHTML = playingAll
+      ? `${ICON.stop}<span>停止</span><span class="count">${(i || 0) + 1} / ${lines.length}</span>`
+      : `${ICON.play}<span>连续播放</span>`;
+    playAllBtn.setAttribute("aria-label", playingAll ? "停止连续播放" : "从头连续播放这一课");
+  }
+
+  function stopAll() {
+    run++;
+    Speech.stop();
+    Clip.stop();
+    app.querySelectorAll(".is-speaking").forEach(el => el.classList.remove("is-speaking"));
+    if (playingAll) { playingAll = false; updatePlayAll(); keepAwake(false); }
+  }
+
+  function ensureVisible(card) {
+    const r = card.getBoundingClientRect();
+    const top = (app.querySelector(".topbar") || {}).offsetHeight || 0;
+    const bottom = window.innerHeight - (player.hidden ? 0 : player.offsetHeight);
+    if (r.top < top + 8 || r.bottom > bottom - 8) {
+      card.scrollIntoView({ block: "center", behavior: reduceMotion ? "auto" : "smooth" });
+    }
+  }
+
+  async function speakLine(i) {
+    const line = lines[i];
+    const card = cardEl(i);
+    const words = Array.from(card.querySelectorAll(".w"));
+    clearTimeout(clearTimers.get(card));
+    app.querySelectorAll(".line.is-active").forEach(el => { if (el !== card) el.classList.remove("is-active"); });
+    card.classList.add("is-active", "is-speaking");
+    words.forEach(w => w.classList.remove("on", "read"));
+    const res = await sayLine(line, {
+      rate: rateValue(),
+      onWord: k => words.forEach((w, j) => { w.classList.toggle("on", j === k); w.classList.toggle("read", j < k); })
+    });
+    words.forEach(w => { w.classList.remove("on"); w.classList.toggle("read", res === "end"); });
+    return res;
+  }
+
+  function settleCard(i) {
+    const card = cardEl(i);
+    if (!card) return;
+    card.classList.remove("is-speaking");
+    clearTimers.set(card, setTimeout(() => card.querySelectorAll(".w").forEach(w => w.classList.remove("read")), 1200));
+  }
+
+  async function playOne(i) {
+    stopAll();
+    const my = run;
+    await speakLine(i);
+    if (my === run) settleCard(i);
+  }
+
+  async function playAll() {
+    stopAll();
+    const my = run;
+    playingAll = true;
+    keepAwake(true);
+    const n = lines.length;
+    const gap = scene.listen ? 450 : 900;   // a conversation between locals runs closer together
+    for (let i = 0; i < n; i++) {
+      updatePlayAll(i);
+      const card = cardEl(i);
+      ensureVisible(card);
+      for (let r = 0; r < S.repeat; r++) {
+        const res = await speakLine(i);
+        if (my !== run) return;
+        if (res === "unsupported") { stopAll(); return; }
+        await sleep(r < S.repeat - 1 ? 700 : Math.round(gap / rateValue()));
+        if (my !== run) return;
+      }
+      settleCard(i);
+    }
+    playingAll = false;
+    updatePlayAll();
+    keepAwake(false);
+    saved.done[scene.id] = true;
+    save();
+    const end = document.getElementById("lesson-end");
+    end.outerHTML = endBlock();
+    document.getElementById("lesson-end").scrollIntoView({ block: "center", behavior: reduceMotion ? "auto" : "smooth" });
+  }
+
+  async function playChip(chip) {
+    const again = chip.classList.contains("is-speaking");
+    stopAll();
+    if (again) return;
+    const line = lines[+chip.dataset.i];
+    const item = line[chip.dataset.chip][+chip.dataset.k];
+    chip.classList.add("is-speaking");
+    await Speech.speak(item[0], { voice: deviceVoice(), rate: rateValue() });
+    chip.classList.remove("is-speaking");
+  }
+
+  /* ---------- navigation ---------- */
+  const hashId = () => { try { return decodeURIComponent(location.hash.slice(1)); } catch (e) { return ""; } };
+  function show(id) {
+    stopAll();
+    if (id && Object.prototype.hasOwnProperty.call(INDEX, id)) renderLesson(INDEX[id]);
+    else renderHome();
+    window.scrollTo(0, 0);
+  }
+  function navigate(id) {
+    try { history.pushState(null, "", "#" + (id || "")); } catch (e) { /* history unavailable in this frame */ }
+    show(id);
+  }
+  window.addEventListener("popstate", () => show(hashId()));
+
+  /* ---------- settings ---------- */
+  const dialog = document.getElementById("settings");
+  const optEn = document.getElementById("opt-en");
+  const optZh = document.getElementById("opt-zh");
+  const selVoice = document.getElementById("voice-sel");
+  const voiceHint = document.getElementById("voice-hint");
+
+  function applySettings() {
+    document.documentElement.style.setProperty("--scale", SIZES[S.size] || 1.1);
+    document.body.classList.toggle("hide-en", !S.showEn);
+    document.body.classList.toggle("hide-zh", !S.showZh);
+    document.querySelectorAll("[data-rate]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.rate === S.rate)));
+    document.querySelectorAll("[data-size]").forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.size === S.size)));
+    document.querySelectorAll("[data-repeat]").forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.repeat === S.repeat)));
+    optEn.checked = S.showEn;
+    optZh.checked = S.showZh;
+  }
+
+  function fillVoices() {
+    const list = Speech.voices();
+    selVoice.innerHTML = '<option value="">设备默认（推荐）</option>' + list.map(v =>
+      `<option value="${esc(v.name)}">${esc(v.name.replace(/^Microsoft /, ""))} (${esc(v.lang)})</option>`).join("");
+    selVoice.disabled = !Speech.supported;
+    selVoice.value = deviceVoice() ? S.voice : "";
+    voiceHint.textContent = Speech.supported ? "" : "这个浏览器不支持朗读。请换用 Safari、Chrome 或 Edge。";
+  }
+
+  function openSettings() {
+    applySettings();
+    fillVoices();
+    if (dialog.showModal) dialog.showModal(); else dialog.setAttribute("open", "");
+  }
+  function closeSettings() {
+    if (dialog.close) dialog.close(); else dialog.removeAttribute("open");
+  }
+  Speech.onVoices(() => { if (dialog.open) fillVoices(); });
+
+  optEn.addEventListener("change", () => { S.showEn = optEn.checked; save(); applySettings(); });
+  optZh.addEventListener("change", () => { S.showZh = optZh.checked; save(); applySettings(); });
+  selVoice.addEventListener("change", () => { S.voice = selVoice.value; save(); });
+  dialog.addEventListener("click", e => { if (e.target === dialog) closeSettings(); });
+
+  /* ---------- one click handler for everything ---------- */
+  document.addEventListener("click", e => {
+    const t = e.target.closest("button, .line");
+    if (!t) return;
+    const d = t.dataset;
+    if (d.go) return navigate(d.go);
+    if ("home" in d) return navigate("");
+    if ("settings" in d) return openSettings();
+    if ("close" in d) return closeSettings();
+    if (d.rate) { S.rate = d.rate; save(); return applySettings(); }
+    if (d.size) { S.size = +d.size; save(); return applySettings(); }
+    if (d.repeat) { S.repeat = +d.repeat; save(); return applySettings(); }
+    if ("test" in d) {
+      stopAll();
+      return Speech.speak("How would you like to pay? Debit, please.", { voice: deviceVoice(), rate: rateValue() });
+    }
+    if (d.reveal) return t.closest(".line").classList.add("show-" + d.reveal);
+    if (d.chip) return playChip(t);
+    if (t.id === "play-all") return playingAll ? stopAll() : playAll();
+    if ("again" in d) return playAll();
+    if ("finish" in d) {
+      saved.done[scene.id] = true;
+      save();
+      const next = SCENES[sceneIndex + 1];
+      return navigate(next ? next.id : "");
+    }
+    const line = t.closest(".line");
+    if (line) return line.classList.contains("is-speaking") ? stopAll() : playOne(+line.dataset.i);
+  });
+
+  applySettings();
+  show(hashId());
+})();
+</script>

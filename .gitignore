@@ -1,0 +1,16 @@
+# Build output and hosting
+dist/
+.vercel/
+
+# Local tool and editor settings
+.claude/
+.idea/
+
+# Python
+__pycache__/
+.venv/
+venv/
+
+# OS
+Thumbs.db
+.DS_Store
