@@ -70,6 +70,8 @@ en-US-AvaNeural|+0%|June fifth, nineteen sixty-five.  →  bc545e9ffe8f.mp3
 - `index.html` 是按 Claude 页面（Artifact）的格式写的，没有 `<!doctype>` 和 `<head>`，因为 Claude 发布时会自动套上外壳。
 - 放到别处时缺了这些，浏览器会进入怪异模式，iPhone 也会按电脑宽度把页面缩小显示。`tools/build.mjs` 在部署时补上完整外壳和手机 viewport，源文件不用改，两边都能用。
 - Vercel 读 `vercel.json`：运行构建，发布 `dist/`，给 mp3 设长期缓存。
+- **国内打不开 `*.vercel.app`**（整个域名被墙），所以又用 GitHub Actions（`.github/workflows/pages.yml`）发布到 GitHub Pages。`*.github.io` 国内一般能开，但偶尔慢或不稳定；再不行就买个域名绑到 Vercel。
+- **不能用 Google Fonts。** 国内连不上 fonts.googleapis.com，浏览器会一直等字体文件，页面白屏很久才出来。现在只用系统自带字体（iPhone 上是苹方）。
 - 如果还要更新 Claude 上那个预览页面：它最多放 511 个文件，每次最多上传 255 个。课变多以后，以 Vercel 为主。
 
 ## 进度

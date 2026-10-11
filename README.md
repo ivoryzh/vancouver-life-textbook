@@ -2,7 +2,7 @@
 
 给爸妈准备的生活英语课本。他们六十岁左右，准备搬来温哥华生活：写下来的英语大多能看懂，可真人一开口就跟不上。所以这里不背单词、不打卡，只按生活场景一课一课地听。每句话都有 AI 朗读、跟着声音走的高亮光标、中文意思，还有“听起来像”的连读提示和本地小贴士。
 
-网站部署在 Vercel，push 到 `main` 会自动更新。
+网站同时部署在 Vercel 和 GitHub Pages（https://ivoryzh.github.io/vancouver-life-textbook/ ，国内一般能打开），push 到 `main` 两边都会自动更新。
 
 ## 内容
 
@@ -20,7 +20,7 @@
 | `audio/` | 生成好的 mp3，和对照表 `manifest.js` |
 | `tools/make_audio.py` | 生成语音 |
 | `tools/check_audio.py` | 用语音识别检查生成的语音 |
-| `tools/build.mjs` | 打包成完整网页到 `dist/`，Vercel 部署时自动运行 |
+| `tools/build.mjs` | 打包成完整网页到 `dist/`，Vercel 和 GitHub Pages 部署时自动运行 |
 
 ## 加一课
 
@@ -29,7 +29,7 @@
 3. 生成语音：`python tools/make_audio.py --prune`
 4. 检查语音：`python tools/check_audio.py`
 5. 本地预览，看一眼效果（见下）。
-6. commit 并 push，Vercel 会自动更新。
+6. commit 并 push，Vercel 和 GitHub Pages 会自动更新。
 
 第一次运行需要先装：`pip install edge-tts faster-whisper`，另外要有 Node.js。
 
