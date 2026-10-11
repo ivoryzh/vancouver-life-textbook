@@ -309,6 +309,15 @@ dialog::backdrop { background: rgba(8, 18, 20, 0.55); }
       </div>
     </section>
     <section class="field">
+      <h3>页面颜色</h3>
+      <div class="seg" role="group" aria-label="页面颜色">
+        <button type="button" data-theme="light">浅色</button>
+        <button type="button" data-theme="dark">深色</button>
+        <button type="button" data-theme="auto">跟随手机</button>
+      </div>
+      <p class="hint">「跟随手机」：手机开了深色模式，这里也变深色。</p>
+    </section>
+    <section class="field">
       <h3>朗读速度</h3>
       <div class="seg" role="group" aria-label="朗读速度">
         <button type="button" data-rate="slow">慢</button>
@@ -363,7 +372,7 @@ dialog::backdrop { background: rgba(8, 18, 20, 0.55); }
 
   const saved = (() => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } })();
   saved.done = saved.done || {};
-  saved.settings = Object.assign({ size: 1, rate: "mid", repeat: 1, showEn: true, showZh: true, voice: "" }, saved.settings);
+  saved.settings = Object.assign({ size: 1, rate: "mid", repeat: 1, showEn: true, showZh: true, voice: "", theme: "auto" }, saved.settings);
   const S = saved.settings;
   function save() { try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (e) { /* storage unavailable */ } }
 
@@ -827,11 +836,14 @@ dialog::backdrop { background: rgba(8, 18, 20, 0.55); }
 
   function applySettings() {
     document.documentElement.style.setProperty("--scale", SIZES[S.size] || 1.1);
+    if (S.theme === "light" || S.theme === "dark") document.documentElement.dataset.theme = S.theme;
+    else delete document.documentElement.dataset.theme;
     document.body.classList.toggle("hide-en", !S.showEn);
     document.body.classList.toggle("hide-zh", !S.showZh);
     document.querySelectorAll("[data-rate]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.rate === S.rate)));
     document.querySelectorAll("[data-size]").forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.size === S.size)));
     document.querySelectorAll("[data-repeat]").forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.repeat === S.repeat)));
+    document.querySelectorAll("button[data-theme]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.theme === S.theme)));
     optEn.checked = S.showEn;
     optZh.checked = S.showZh;
   }
@@ -872,6 +884,7 @@ dialog::backdrop { background: rgba(8, 18, 20, 0.55); }
     if (d.rate) { S.rate = d.rate; save(); return applySettings(); }
     if (d.size) { S.size = +d.size; save(); return applySettings(); }
     if (d.repeat) { S.repeat = +d.repeat; save(); return applySettings(); }
+    if (d.theme) { S.theme = d.theme; save(); return applySettings(); }
     if ("test" in d) {
       stopAll();
       return Speech.speak("How would you like to pay? Debit, please.", { voice: deviceVoice(), rate: rateValue() });
