@@ -24,43 +24,6 @@
 */
 window.LESSONS = [
   {
-    id: "help",
-    title: "听不懂时怎么办",
-    en: "When you don't understand",
-    scenes: [
-      {
-        id: "say-again",
-        title: "请对方再说一遍",
-        en: "Could you say that again?",
-        intro: "刚开始听不懂很正常，不用慌。这一课的几句话能让对方再说一遍、说慢一点。加拿大人一般都很有耐心。",
-        lines: [
-          { who: "them", role: "店员", en: "Hi there! Do you have a membership with us?", zh: "你好！你是我们店的会员吗？", hear: "Hi there! D'you have a membership with us?", note: "with us 是“在我们这儿”的意思。不用每个词都听懂，抓住 membership（会员）就够了。" },
-          { who: "me", en: "Sorry, could you say that again?", zh: "不好意思，能再说一遍吗？", note: "最有用的一句话。着急的时候，只说一个词也可以。", say: [["Sorry?", "什么？（语调往上扬）"], ["Pardon?", "请再说一遍？"]] },
-          { who: "them", role: "店员", en: "Sure! Are you a member here?", zh: "好的！你是这里的会员吗？" },
-          { who: "me", en: "Could you speak a little slower, please?", zh: "你能说慢一点吗？", note: "说完这句，对方通常会放慢速度，换更简单的说法。", words: [["slower", "慢一点"], ["a little", "一点点"]] },
-          { who: "them", role: "店员", en: "Of course. Are you a member?", zh: "当然。你是会员吗？" },
-          { who: "me", en: "Oh, no, I'm not. Thank you.", zh: "哦，不是。谢谢。" },
-          { who: "them", role: "店员", en: "No worries!", zh: "没关系！", note: "No worries 就是“没事、没关系、不客气”，在加拿大到处都能听到。" }
-        ]
-      },
-      {
-        id: "ask-help",
-        title: "请人帮忙",
-        en: "Asking for help",
-        intro: "需要帮忙时，先说 Excuse me 引起注意。直接告诉对方你的英语不太好，他们会说得更慢、更简单。温哥华有很多会说中文的人，也可以问一问。",
-        lines: [
-          { who: "me", en: "Excuse me, could you help me?", zh: "打扰一下，你能帮我一下吗？", note: "Excuse me 用来引起别人注意，相当于“劳驾”、“打扰一下”。" },
-          { who: "them", role: "店员", en: "Sure, what can I do for you?", zh: "当然，有什么可以帮你的？", hear: "Sure, what c'n I do for ya?" },
-          { who: "me", en: "Sorry, my English is not very good.", zh: "不好意思，我的英语不太好。", note: "说这句一点也不丢人，对方听了会更耐心。" },
-          { who: "them", role: "店员", en: "That's okay. Take your time.", zh: "没关系，慢慢来。", note: "Take your time 就是“不着急，慢慢来”。听到这句可以放松。" },
-          { who: "me", en: "Could you write it down for me?", zh: "你能帮我写下来吗？", note: "听不清地址、名字、数字、时间的时候特别有用。写下来的英文你们是能看懂的。" },
-          { who: "me", en: "Does anyone here speak Mandarin?", zh: "这里有人会说普通话吗？", note: "温哥华很多店都有会说中文的员工。", say: [["Do you speak Mandarin?", "你会说普通话吗？"], ["Does anyone speak Cantonese?", "有人会说粤语吗？"]] },
-          { who: "them", role: "店员", en: "Let me check for you. One moment.", zh: "我帮你问问，稍等一下。", hear: "Lemme check for ya. One moment.", note: "One moment 和 Just a sec 都是“稍等”。" }
-        ]
-      }
-    ]
-  },
-  {
     id: "neighbours",
     title: "邻居和电梯",
     en: "Neighbours & the elevator",
@@ -117,6 +80,43 @@ window.LESSONS = [
           { who: "me", en: "You're welcome. Have a good day!", zh: "不客气，祝你今天愉快！" },
           { who: "them", role: "路人", en: "Here, let me get that for you.", zh: "来，我帮你。", note: "别人帮你开门、拿东西时会这么说。" },
           { who: "me", en: "Thank you, I appreciate it.", zh: "谢谢，非常感谢。", note: "I appreciate it 比 Thank you 更郑重一点。" }
+        ]
+      }
+    ]
+  },
+  {
+    id: "help",
+    title: "听不懂时怎么办",
+    en: "When you don't understand",
+    scenes: [
+      {
+        id: "say-again",
+        title: "请对方再说一遍",
+        en: "Could you say that again?",
+        intro: "刚开始听不懂很正常，不用慌。这一课的几句话能让对方再说一遍、说慢一点。加拿大人一般都很有耐心。",
+        lines: [
+          { who: "them", role: "店员", en: "Hi there! Do you have a membership with us?", zh: "你好！你是我们店的会员吗？", hear: "Hi there! D'you have a membership with us?", note: "with us 是“在我们这儿”的意思。不用每个词都听懂，抓住 membership（会员）就够了。" },
+          { who: "me", en: "Sorry, could you say that again?", zh: "不好意思，能再说一遍吗？", note: "最有用的一句话。着急的时候，只说一个词也可以。", say: [["Sorry?", "什么？（语调往上扬）"], ["Pardon?", "请再说一遍？"]] },
+          { who: "them", role: "店员", en: "Sure! Are you a member here?", zh: "好的！你是这里的会员吗？" },
+          { who: "me", en: "Could you speak a little slower, please?", zh: "你能说慢一点吗？", note: "说完这句，对方通常会放慢速度，换更简单的说法。", words: [["slower", "慢一点"], ["a little", "一点点"]] },
+          { who: "them", role: "店员", en: "Of course. Are you a member?", zh: "当然。你是会员吗？" },
+          { who: "me", en: "Oh, no, I'm not. Thank you.", zh: "哦，不是。谢谢。" },
+          { who: "them", role: "店员", en: "No worries!", zh: "没关系！", note: "No worries 就是“没事、没关系、不客气”，在加拿大到处都能听到。" }
+        ]
+      },
+      {
+        id: "ask-help",
+        title: "请人帮忙",
+        en: "Asking for help",
+        intro: "需要帮忙时，先说 Excuse me 引起注意。直接告诉对方你的英语不太好，他们会说得更慢、更简单。温哥华有很多会说中文的人，也可以问一问。",
+        lines: [
+          { who: "me", en: "Excuse me, could you help me?", zh: "打扰一下，你能帮我一下吗？", note: "Excuse me 用来引起别人注意，相当于“劳驾”、“打扰一下”。" },
+          { who: "them", role: "店员", en: "Sure, what can I do for you?", zh: "当然，有什么可以帮你的？", hear: "Sure, what c'n I do for ya?" },
+          { who: "me", en: "Sorry, my English is not very good.", zh: "不好意思，我的英语不太好。", note: "说这句一点也不丢人，对方听了会更耐心。" },
+          { who: "them", role: "店员", en: "That's okay. Take your time.", zh: "没关系，慢慢来。", note: "Take your time 就是“不着急，慢慢来”。听到这句可以放松。" },
+          { who: "me", en: "Could you write it down for me?", zh: "你能帮我写下来吗？", note: "听不清地址、名字、数字、时间的时候特别有用。写下来的英文你们是能看懂的。" },
+          { who: "me", en: "Does anyone here speak Mandarin?", zh: "这里有人会说普通话吗？", note: "温哥华很多店都有会说中文的员工。", say: [["Do you speak Mandarin?", "你会说普通话吗？"], ["Does anyone speak Cantonese?", "有人会说粤语吗？"]] },
+          { who: "them", role: "店员", en: "Let me check for you. One moment.", zh: "我帮你问问，稍等一下。", hear: "Lemme check for ya. One moment.", note: "One moment 和 Just a sec 都是“稍等”。" }
         ]
       }
     ]
